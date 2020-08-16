@@ -25,7 +25,7 @@ namespace Sistema_Clientes.Models
         [Required(ErrorMessage = "Campo Documento obrigatório")]
         public string Documento { get; set; }
 
-       
+        [Display(Name = "Data cadastro")]
         public DateTime DataCadastro { get; set; }
 
         [Display(Name = "Telefone")]

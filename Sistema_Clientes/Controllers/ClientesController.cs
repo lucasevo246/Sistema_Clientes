@@ -18,7 +18,7 @@ namespace Sistema_Clientes.Controllers
         // GET: Clientes
         public ActionResult Index()
         {
-            return View(db.Clientes.ToList());
+            return View(db.Clientes.Where(x => x.Ativo == true).ToList());
         }
 
         // GET: Clientes/Details/5
@@ -104,7 +104,7 @@ namespace Sistema_Clientes.Controllers
         // Para obter mais detalhes, confira https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,Nome,Tipo,DataCadastro,Documento,Tel")] Cliente cliente)
+        public ActionResult Edit([Bind(Include = "ID,Nome,Tipo,DataCadastro,Documento,Tel,Ativo")] Cliente cliente)
         {
             if (ModelState.IsValid)
             {
@@ -157,7 +157,44 @@ namespace Sistema_Clientes.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Cliente cliente = db.Clientes.Find(id);
-            db.Clientes.Remove(cliente);
+            //db.Clientes.Remove(cliente);
+            cliente.Ativo = false;
+            db.Entry(cliente).State = EntityState.Modified;
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+        // GET: Clientes/DeletedList
+        public ActionResult DeletedList()
+        {
+            return View(db.Clientes.Where(x => x.Ativo == false).ToList());
+        }
+
+
+        // GET: Clientes/Delete/5
+        public ActionResult Recover(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Cliente cliente = db.Clientes.Find(id);
+            if (cliente == null)
+            {
+                return HttpNotFound();
+            }
+            return View(cliente);
+        }
+
+        // POST: Clientes/Recover/5
+        [HttpPost, ActionName("Recover")]
+        [ValidateAntiForgeryToken]
+        public ActionResult RecoverItem(int id)
+        {
+            Cliente cliente = db.Clientes.Find(id);
+            //db.Clientes.Remove(cliente);
+            cliente.Ativo = true;
+            db.Entry(cliente).State = EntityState.Modified;
             db.SaveChanges();
             return RedirectToAction("Index");
         }
