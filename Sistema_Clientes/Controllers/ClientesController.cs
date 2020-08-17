@@ -16,9 +16,22 @@ namespace Sistema_Clientes.Controllers
         private ClienteDbContext db = new ClienteDbContext();
 
         // GET: Clientes
-        public ActionResult Index()
+        public ActionResult Index(string searchString,string Search2)
         {
-            return View(db.Clientes.Where(x => x.Ativo == true).ToList());
+            var clientes = db.Clientes.Where(x => x.Ativo == true);
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                clientes = clientes.Where(s => s.Nome.Contains(searchString));
+            }
+            if (!String.IsNullOrEmpty(Search2))
+            {
+                clientes = clientes.Where(s => s.Documento.Contains(Search2));
+
+            }
+
+
+            return View(clientes);
         }
 
         // GET: Clientes/Details/5
@@ -165,9 +178,21 @@ namespace Sistema_Clientes.Controllers
         }
 
         // GET: Clientes/DeletedList
-        public ActionResult DeletedList()
+        public ActionResult DeletedList(string searchString,string Search2)
         {
-            return View(db.Clientes.Where(x => x.Ativo == false).ToList());
+            var clientes = db.Clientes.Where(x => x.Ativo == false);
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                clientes = clientes.Where(s => s.Nome.Contains(searchString));
+            }
+            if (!String.IsNullOrEmpty(Search2))
+            {
+                clientes = clientes.Where(s => s.Documento.Contains(Search2));
+
+            }
+
+            return View(clientes);
         }
 
 
